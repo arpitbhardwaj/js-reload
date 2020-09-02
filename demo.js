@@ -1,56 +1,20 @@
 'use strict';
 (function() {
 
-    class Person {
-        constructor(firstName, lastName, age) {
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.age = age;
-        }
+    function findAlerts(logData) {
+        let regex = /ERROR(.*?):(.*?);/g;
 
-        static adultAge = 18;
-
-        get fullName() {
-            return this.firstName + ' ' + this.lastName;
-        }
-
-        set fullName(fullName) {
-            var nameParts = fullName.split(' ');
-            this.firstName = nameParts[0];
-            this.lastName = nameParts[1];
-        }
-
-        isAdult() {
-            return this.age >= 18;
+        let result = regex.exec(logData);
+        while (result !== null) {
+            display(result[1]);
+            display(result[2]);
+            display('---------------------------');
+            result = regex.exec(logData);
         }
     }
 
-    display(Person.adultAge);
+    let logData = 'INFO:Ok;ERROR(HIGH):Something broke;ERROR(LOW):Something fishy;ERROR(HIGH):So many errors;';
 
-    class Student extends Person {
-        constructor(firstName, lastName, age) {
-            super(firstName, lastName, age);
-            this._enrolledCourses = [];
-        }
-
-        static fromPerson(person) {
-            return new Student(person.firstName, person.lastName, person.age);
-        }
-
-        enroll(courseId) {
-            this._enrolledCourses.push(courseId);
-        }
-
-        getCourses() {
-            return this.fullName + "'s enrolled courses are: " +
-                this._enrolledCourses.join(', ');
-        }
-    }
-
-    let jim = new Person('Jim', 'Cooper', 29);
-
-    let jimStudent = Student.fromPerson(jim);
-
-    display(jimStudent);
+    findAlerts(logData);
 
 })();
